@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điểm danh bằng ảnh từ máy tính</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #fdf2f4;
+            margin: 0;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #000;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        #image-preview-container {
+            width: 640px;
+            height: 480px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f3e5f5;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Làm mờ viền */
+        }
+        #image-preview {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+            display: none;
+        }
+        #image-id {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 200px;
+        }
+        #submit-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #fdf2f4;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        #submit-button:hover {
+            background-color: #ad1457;
+            color: #fff;
+        }
+        #info-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #f8bbd0;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        #info-table td, #info-table th {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        #info-table th {
+            background-color: #f3e5f5;
+        }
+        .button-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .button-container button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #fdf2f4;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .button-container button:hover {
+            background-color: #ad1457;
+            color: #fff;
+        }
+    </style>
+    <script>
+        function fetchCapturedFaces() {
+            fetch('/captured_faces')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#info-table tbody');
+                    tableBody.innerHTML = '';
+
+                    data.captured_faces.forEach((face, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${face.name}</td>
+                            <td>${face.time}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        setInterval(fetchCapturedFaces, 2000); // Fetch every 2 seconds
+    </script>
+</head>
+<body>
+    <h1>Điểm danh bằng ảnh từ máy tính</h1>
+    <div class="image-container">
+        <div id="image-preview-container">
+            <img src="/video_feed">
+        </div>
+    </div>
+    <div id="info-container">
+        <table id="info-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Họ và Tên</th>
+                    <th>Thời Gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <div class="button-container">
+            <button onclick="openDoor()">Mở cửa</button>
+            <button onclick="closeDoor()">Đóng cửa</button>
+        </div>
+    </div>
+</body>
+</html>
